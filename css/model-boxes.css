@@ -42,4 +42,11 @@
     font-size: 19px;
     margin-bottom: 5px;
 }
+.calc-form-wrapper-bottom{
+    display: none;
+}
+.results-wrapper{
+    display: none;
+}
+
 

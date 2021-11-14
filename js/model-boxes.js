@@ -2,7 +2,7 @@ jQuery(document).ready(function () {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const slug = urlParams.get('model');
-    if(slug !== null) {
+    if (slug !== null) {
         const activeBtn = jQuery('[data-slug="' + slug + '"]');
         activeBtn.addClass("active");
         const id = activeBtn.attr("data-modelid");
@@ -31,4 +31,71 @@ jQuery(document).ready(function () {
             window.history.pushState({path: newUrl}, "", newUrl);
         }
     });
-})
+});
+
+jQuery(document).ready(function () {
+    jQuery('#calculate').click(function () {
+        let power = (parseInt(jQuery('#area').val()) * parseInt(jQuery('#kw').val())) / 1000;
+        let tank = 0;
+        if (parseInt(jQuery("input[type='radio'][name='hot_water']:checked").val()) === 1) {
+            tank = 1;
+            let water = (parseInt(jQuery('#water').val()) * 1000) / 30;
+            if (water <= 200 && power < 8) {
+                power += 2;
+            } else if (water > 200 && power < 8) {
+                power += 3;
+            }
+
+            tank = parseInt(jQuery("input[type='radio'][name='hot_water_tank']:checked").val());
+        }
+        console.log(power);
+        console.log(tank);
+
+        if (power > 16) {
+            jQuery('.results').html(' 0 ');
+        } else {
+            jQuery.ajax({
+                type: "post",
+                dataType: "json",
+                url: models_ajax_object.ajax_url,
+                data: {
+                    action: "get_models",
+                    power: power,
+                    tank: tank
+                },
+                success: function (rez) {
+                    //const result = JSON.parse(rez);
+                    let html = '';
+                    jQuery('.results-wrapper').show();
+                    console.log(rez);
+                    if (rez !== 0) {
+                        rez.forEach(function (model) {
+                            html += '<a href="' + model.link + '">' + model.title + '</a>';
+                        });
+                        jQuery('.results').html(html);
+                    } else {
+                        jQuery('.results').html(' 0 ');
+                    }
+
+                }
+            });
+        }
+
+    });
+
+    jQuery("input[type='radio'][name='energy_class']").click(function () {
+        let kw = jQuery(this).val();
+        jQuery('#kw').val(kw);
+    });
+
+    jQuery("input[type='radio'][name='hot_water']").change(function(){
+        if(parseInt(jQuery("input[type='radio'][name='hot_water']:checked").val()) === 1){
+            jQuery('.calc-form-wrapper-bottom').show();
+        }else{
+            jQuery('.calc-form-wrapper-bottom').hide();
+        }
+    });
+
+});
+
+
