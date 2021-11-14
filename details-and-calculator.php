@@ -3,7 +3,7 @@
  * Plugin Name: Filter and Calculator
  * Description:
  * Version: 1.0
- * Author: Your mom's favorite Developer
+ * Author: Your mom's "favorite" Developer
  * Author URI: http://developer.xyz
  */
 
@@ -46,7 +46,7 @@ function getProductVariations($id)
 }
 
 add_action('woocommerce_after_single_product_summary', 'kabal_add_models_info');
-add_action('woocommerce_product_thumbnails', 'kabal_add_models');
+add_action('woocommerce_product_thumbnails', 'kabal_add_models', 100);
 
 function kabal_add_models()
 {
@@ -55,6 +55,7 @@ function kabal_add_models()
     $id = $product->get_id();
     $models = getProductVariations($id);
     $output = '';
+    // $output .= '<div><p class="tech-data">TECHNICAL DATA:</p></div>';
     $output .= '<div class="models-wrapper">';
     $active = '';
     foreach ($models as $model) {

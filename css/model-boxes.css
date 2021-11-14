@@ -3,25 +3,43 @@
 }
 
 .models-wrapper {
-    display: flex;
+    display: inline-block;
     flex-wrap: wrap;
     justify-content: space-around;
-    margin-top: 10px;
+    margin-top: 15px;
 }
 
 .model-box {
     cursor: pointer;
-    border: 1px solid #000;
     display: inline-block;
     padding: 10px;
+    margin: 0 0.3em 0.3em 0;
+    border-radius: 5px;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: "Roboto", sans-serif;
+    font-weight: 300;
+    color: #ffffff;
+    background-color: #4682B4;
+    text-align: center;
+    transition: all 0.2s;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.model-box:hover{
+    background-color: #4077a3;
 }
 
 .model-box.active {
-    border: 1px solid #ccc;
+    background-color: #36668d;
 }
 
-.model-info-box {
-    border: 1px solid #ccc;
-    padding: 10px;
+.tech-data {
+    margin-left: 25px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-size: 19px;
+    margin-bottom: 5px;
 }
 
