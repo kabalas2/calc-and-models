@@ -34,14 +34,13 @@ add_action('init', 'create_posttype');
 
 function getProductVariations($id)
 {
-
-
     $posts = get_posts(array(
         'numberposts' => -1,
         'post_type' => 'variations',
         'suppress_filters' => false,
-        'orderby'			=> 'position',
-        'order'				=> 'DESC',
+        'meta_key'			=> 'position',
+        'orderby'			=> 'meta_value',
+        'order'				=> 'ASC',
         'meta_query' => array(
             array(
                 'key' => 'parent_product_id',
@@ -198,6 +197,8 @@ function kabal_calc_shortcode()
     $output .= '<div class="results-wrapper">';
     $output .= __('According to the data provided by you, the device is offered: ');
     $output .= '<div class="results"></div>';
+    $output .= '<div class="tank-sugest tank-200">'.__('According to your information, the domestic hot water tank "SWP-200" is offered').'</div>';
+    $output .= '<div class="tank-sugest tank-300">'.__('According to your information, the domestic hot water tank "SWP-300" is offered').'</div>';
     $output .= '</div>';
     return $output;
 
@@ -215,23 +216,26 @@ function get_models()
     } elseif ($power >= 11 && $power <= 16) {
         $powerMax = 16;
     }
+    $filters = [];
+    $filters[] = [
+        'key' => 'power',
+        'value' => $powerMax,
+        'type' => 'NUMERIC',
+        'compare' => '='
+    ];
+    $filters[] = [
+        'key' => 'water_tank',
+        'value' => $tank,
+        'type' => 'NUMERIC',
+        'compare' => '='
+    ];
+
     $posts = get_posts(array(
         'numberposts' => -1,
         'post_type' => 'variations',
         'meta_query' => [
             'relation' => 'AND',
-            [
-                'key' => 'power',
-                'value' => $powerMax,
-                'type' => 'NUMERIC',
-                'compare' => '='
-            ],
-            [
-                'key' => 'water_tank',
-                'value' => $tank,
-                'type' => 'NUMERIC',
-                'compare' => '='
-            ]
+            $filters
         ]
     ));
 

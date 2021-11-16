@@ -35,11 +35,13 @@ jQuery(document).ready(function () {
 
 jQuery(document).ready(function () {
     jQuery('#calculate').click(function () {
+        jQuery('.tank-sugest').hide();
         let power = (parseInt(jQuery('#area').val()) * parseInt(jQuery('#kw').val())) / 1000;
         let tank = 0;
+        let water = 0;
         if (parseInt(jQuery("input[type='radio'][name='hot_water']:checked").val()) === 1) {
             tank = 1;
-            let water = (parseInt(jQuery('#water').val()) * 1000) / 30;
+            water = (parseInt(jQuery('#water').val()) * 1000) / 30;
             if (water <= 200 && power < 8) {
                 power += 2;
             } else if (water > 200 && power < 8) {
@@ -50,6 +52,7 @@ jQuery(document).ready(function () {
         }
         console.log(power);
         console.log(tank);
+        console.log(water);
 
         if (power > 16) {
             jQuery('.results').html(' 0 ');
@@ -61,7 +64,7 @@ jQuery(document).ready(function () {
                 data: {
                     action: "get_models",
                     power: power,
-                    tank: tank
+                    tank: tank,
                 },
                 success: function (rez) {
                     //const result = JSON.parse(rez);
@@ -75,6 +78,14 @@ jQuery(document).ready(function () {
                         jQuery('.results').html(html);
                     } else {
                         jQuery('.results').html(' 0 ');
+                    }
+
+                    if(tank === 0 && water <= 200){
+                        jQuery('.tank-200').show();
+                    }
+
+                    if(tank === 0 && water > 200){
+                        jQuery('.tank-300').show();
                     }
 
                 }
