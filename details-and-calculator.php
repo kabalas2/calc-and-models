@@ -34,13 +34,20 @@ add_action('init', 'create_posttype');
 
 function getProductVariations($id)
 {
+
+
     $posts = get_posts(array(
         'numberposts' => -1,
         'post_type' => 'variations',
-        'meta_key' => 'parent_product_id',
-        'meta_value' => $id,
+        'suppress_filters' => false,
         'orderby'			=> 'position',
-        'order'				=> 'DESC'
+        'order'				=> 'DESC',
+        'meta_query' => array(
+            array(
+                'key' => 'parent_product_id',
+                'value' => $id, 
+            )
+        )
     ));
 
     return $posts;
@@ -55,30 +62,36 @@ function kabal_add_models()
     $id = $product->get_id();
     $models = getProductVariations($id);
     $output = '';
-    $output .= '<div><p class="tech-data">' . __('TECHNICAL DATA:') . '</p></div>';
-    $output .= '<div class="models-wrapper">';
-    $active = '';
-    $sortedModels = [];
-    foreach ($models as $model) {
-        if($model->indooroutdoor_units == 0) {
-            $output .= renderBlock($model);
-        }else{
-            $sortedModels[$model->indooroutdoor_units][] = $model;
+    if(count($models)) {
+        $output .= '<div><p class="tech-data">' . __('TECHNICAL DATA:') . '</p></div>';
+        $output .= '<div class="models-wrapper">';
+        $active = '';
+        $sortedModels = [];
+        foreach ($models as $model) {
+            if ($model->indooroutdoor_units == 0) {
+                $output .= renderBlock($model);
+            } else {
+                $sortedModels[$model->indooroutdoor_units][] = $model;
+            }
         }
-    }
-    if(count($sortedModels[1])){
-        $output .= __('Outdoors:');
-        foreach ($sortedModels[1] as $model){
-            $output .= renderBlock($model);
+        if (count($sortedModels[1])) {
+            $output .= '<div>';
+            $output .= __('Indors:');
+            foreach ($sortedModels[1] as $model) {
+                $output .= renderBlock($model);
+            }
+            $output .= '</div>';
         }
-    }
-    if(count($sortedModels[2])){
-        $output .= __('Indors:');
-        foreach ($sortedModels[2] as $model){
-            $output .= renderBlock($model);
+        if (count($sortedModels[2])) {
+            $output .= '<div>';
+            $output .= __('Outdoors:');
+            foreach ($sortedModels[2] as $model) {
+                $output .= renderBlock($model);
+            }
+            $output .= '</div>';
         }
+        $output .= '</div>';
     }
-    $output .= '</div>';
     echo $output;
     //echo do_shortcode('[models_calculator]');
 }
